@@ -7,7 +7,7 @@ export class CartRepository {
         try {
             const result = await query<Cart>({
                 name: 'cart_find_active',
-                text: 'SELECT * FROM carts WHERE user_id = $1 AND status = \'active\'',
+                text: 'SELECT id, user_id as "userId", status, created_at as "createdAt", updated_at as "updatedAt" FROM carts WHERE user_id = $1 AND status = \'active\'',
                 values: [userId],
             });
             return result.rows[0];
@@ -21,7 +21,7 @@ export class CartRepository {
       // 1. Get or create active cart
       let cartResult = await txQuery<Cart>(client, {
         name: 'tx_get_cart',
-        text: 'SELECT * FROM carts WHERE user_id = $1 AND status = \'active\'',
+        text: 'SELECT id, user_id as "userId", status FROM carts WHERE user_id = $1 AND status = \'active\'',
         values: [userId],
       });
 
@@ -29,7 +29,7 @@ export class CartRepository {
       if (cartResult.rowCount === 0) {
         cartResult = await txQuery<Cart>(client, {
           name: 'tx_create_cart',
-          text: 'INSERT INTO carts (user_id, status) VALUES ($1, \'active\') RETURNING *',
+          text: 'INSERT INTO carts (user_id, status) VALUES ($1, \'active\') RETURNING id, user_id as "userId", status',
           values: [userId],
         });
       }

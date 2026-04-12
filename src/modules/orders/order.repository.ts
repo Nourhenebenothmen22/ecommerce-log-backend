@@ -6,17 +6,10 @@ export class OrderRepository {
      try {
        const result = await query<Order>({
            name: 'order_create',
-           text: `INSERT INTO orders (user_id, total_amount, status) VALUES ($1, $2, 'pending') RETURNING *`,
+           text: `INSERT INTO orders (user_id, total_amount, status) VALUES ($1, $2, 'pending') RETURNING id, user_id as "userId", total_amount as "totalAmount", status, created_at as "createdAt", updated_at as "updatedAt"`,
            values: [userId, totalAmount]
        });
-       return {
-           id: result.rows[0].id,
-           userId: result.rows[0].userId, // Mapping would be needed for snake case usually, bypassing in mock mostly 
-           totalAmount: result.rows[0].totalAmount,
-           status: result.rows[0].status,
-           createdAt: result.rows[0].createdAt,
-           updatedAt: result.rows[0].updatedAt
-       };
+       return result.rows[0];
      } catch (e) {
          throw e;
      }
@@ -26,12 +19,25 @@ export class OrderRepository {
       try {
           const result = await query<Order>({
               name: 'order_list',
-              text: 'SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
+              text: 'SELECT id, user_id as "userId", total_amount as "totalAmount", status, created_at as "createdAt", updated_at as "updatedAt" FROM orders WHERE user_id = $1 ORDER BY created_at DESC',
               values: [userId]
           });
           return result.rows;
       } catch (e) {
           throw e;
       }
+  }
+
+  async findById(orderId: string): Promise<Order | undefined> {
+    try {
+      const result = await query<Order>({
+        name: 'order_find_by_id',
+        text: 'SELECT id, user_id as "userId", total_amount as "totalAmount", status, created_at as "createdAt", updated_at as "updatedAt" FROM orders WHERE id = $1',
+        values: [orderId],
+      });
+      return result.rows[0];
+    } catch (e) {
+      throw e;
+    }
   }
 }
