@@ -1,6 +1,7 @@
 import express from 'express';
 import { requestContextMiddleware } from './middlewares/request-context.middleware.js';
 import { requestLoggerMiddleware } from './middlewares/request-logger.middleware.js';
+import { successLoggerMiddleware } from './middlewares/success-logger.middleware.js';
 import { createHelmetMiddleware } from './infrastructure/security/helmet.js';
 import { createCorsMiddleware } from './infrastructure/security/cors.js';
 import { rateLimitMiddleware } from './middlewares/rate-limit.middleware.js';
@@ -18,6 +19,7 @@ app.use(express.json());
 // Inject context and pino-http logger
 app.use(requestContextMiddleware);
 app.use(requestLoggerMiddleware);
+app.use(successLoggerMiddleware);
 
 // Mount all routes
 app.use(apiRoutes);

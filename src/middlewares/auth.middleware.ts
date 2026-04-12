@@ -45,7 +45,9 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
 
   // Placeholder user — replace with real JWT payload decoding
   req.user = {
-    id: token.includes('admin') ? 'usr_admin_001' : 'usr_customer_001',
+    id: token.includes('admin') 
+      ? '00000000-0000-0000-0000-000000000001' // Placeholder Admin ID
+      : '00000000-0000-0000-0000-000000000002', // Placeholder Customer ID
     email: token.includes('admin') ? 'admin@example.com' : 'user@example.com',
     role: token.includes('admin') ? 'admin' : 'customer',
   };

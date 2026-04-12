@@ -25,8 +25,8 @@ async function seed() {
 
     // 2. Insert Users
     console.log('👤 Seeding users...');
-    const adminId = uuidv4();
-    const customerId = uuidv4();
+    const adminId = '00000000-0000-0000-0000-000000000001';
+    const customerId = '00000000-0000-0000-0000-000000000002';
 
     await client.query(`
       INSERT INTO users (id, email, password_hash, first_name, last_name, role)
