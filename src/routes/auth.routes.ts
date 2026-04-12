@@ -8,5 +8,6 @@ const router = Router();
 const controller = new AuthController();
 
 router.post('/login', validate(loginSchema), asyncHandler(controller.login));
+router.post('/logout', asyncHandler(controller.logout));
 
 export { router as authRoutes };

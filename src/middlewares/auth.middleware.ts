@@ -1,59 +1,61 @@
 import type { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { HttpError } from '../core/errors/http-error.js';
 import { logSecurityEvent } from '../infrastructure/security/security-logger.js';
+import { env } from '../config/env.js';
+
+interface JwtPayload {
+  sub: string;
+  email: string;
+  role: 'customer' | 'admin';
+}
 
 /**
- * Placeholder auth middleware.
- * In production, replace the token parsing logic with real JWT verification.
- * Attaches a user object to the request if a valid token is present.
+ * Enhanced authentication middleware.
+ * Checks for JWT in cookies first, then falls back to Authorization header.
+ * Verifies the token and attaches the user payload to the request.
  */
 export function authMiddleware(req: Request, _res: Response, next: NextFunction): void {
-  const authHeader = req.headers.authorization;
+  let token: string | undefined;
 
-  if (!authHeader) {
+  // 1. Try to get token from cookies
+  if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  } 
+  // 2. Fallback to Authorization header
+  else if (req.headers.authorization?.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
     logSecurityEvent('unauthorized_access', {
       requestId: req.requestId,
       ip: req.ip,
       route: req.originalUrl,
       method: req.method,
     });
-    throw HttpError.unauthorized('Missing authorization header');
+    throw HttpError.unauthorized('Authentication required');
   }
 
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    logSecurityEvent('malformed_auth_header', {
-      requestId: req.requestId,
-      ip: req.ip,
-      route: req.originalUrl,
-    });
-    throw HttpError.unauthorized('Malformed authorization header', 'INVALID_TOKEN');
-  }
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    
+    req.user = {
+      id: decoded.sub,
+      email: decoded.email,
+      role: decoded.role,
+    };
 
-  const token = parts[1];
-
-  // Placeholder: In production, verify JWT here
-  // For now, accept any non-empty token and attach a fake user
-  if (!token || token.length < 10) {
+    req.log.debug({ userId: req.user.id, role: req.user.role }, 'User authenticated');
+    next();
+  } catch (error) {
     logSecurityEvent('invalid_token', {
       requestId: req.requestId,
       ip: req.ip,
-      route: req.originalUrl,
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
     throw HttpError.unauthorized('Invalid or expired token', 'INVALID_TOKEN');
   }
-
-  // Placeholder user — replace with real JWT payload decoding
-  req.user = {
-    id: token.includes('admin') 
-      ? '00000000-0000-0000-0000-000000000001' // Placeholder Admin ID
-      : '00000000-0000-0000-0000-000000000002', // Placeholder Customer ID
-    email: token.includes('admin') ? 'admin@example.com' : 'user@example.com',
-    role: token.includes('admin') ? 'admin' : 'customer',
-  };
-
-  req.log.debug({ userId: req.user.id }, 'User authenticated via token');
-  next();
 }
 
 /**
