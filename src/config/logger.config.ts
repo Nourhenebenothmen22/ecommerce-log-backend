@@ -60,4 +60,5 @@ export const loggerConfig = createLoggerConfig('app.log');
 export const securityLoggerConfig = createLoggerConfig('security.log');
 export const auditLoggerConfig = createLoggerConfig('audit.log');
 export const httpLoggerConfig = createLoggerConfig('http.log');
+export const successLoggerConfig = createLoggerConfig('success.log');
 

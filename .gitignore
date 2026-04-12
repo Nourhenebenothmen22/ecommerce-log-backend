@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+
+# Logs
+logs/*.log
+!logs/.gitignore
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Misc
+*.txt

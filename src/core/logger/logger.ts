@@ -1,5 +1,5 @@
 import pino, { type Logger } from 'pino';
-import { loggerConfig, securityLoggerConfig, auditLoggerConfig, httpLoggerConfig } from '../../config/logger.config.js';
+import { loggerConfig, securityLoggerConfig, auditLoggerConfig, httpLoggerConfig, successLoggerConfig } from '../../config/logger.config.js';
 
 /** Root application logger */
 export const logger: Logger = pino(loggerConfig);
@@ -8,11 +8,13 @@ export const logger: Logger = pino(loggerConfig);
 export const securityLogInstance: Logger = pino(securityLoggerConfig);
 export const auditLogInstance: Logger = pino(auditLoggerConfig);
 export const httpLogInstance: Logger = pino(httpLoggerConfig);
+export const successLogInstance: Logger = pino(successLoggerConfig);
 
 /** Create a child logger scoped to a module/service */
 export function createModuleLogger(module: string): Logger {
   if (module === 'security') return securityLogInstance.child({ module });
   if (module === 'audit') return auditLogInstance.child({ module });
+  if (module === 'success') return successLogInstance.child({ module });
   return logger.child({ module });
 }
 
