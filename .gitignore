@@ -8,10 +8,11 @@ dist/
 # Environment
 .env
 .env.local
+.env.example
 
 # Logs
-logs/*.log
-!logs/.gitignore
+logs/
+*.log
 
 # IDEs
 .vscode/
