@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { requestContextMiddleware } from './middlewares/request-context.middleware.js';
 import { requestLoggerMiddleware } from './middlewares/request-logger.middleware.js';
 import { successLoggerMiddleware } from './middlewares/success-logger.middleware.js';
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(createHelmetMiddleware());
 app.use(createCorsMiddleware());
+app.use(cookieParser());
 app.use(rateLimitMiddleware); // Apply globally
 app.use(express.json());
 
