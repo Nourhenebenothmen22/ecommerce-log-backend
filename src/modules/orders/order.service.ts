@@ -25,6 +25,7 @@ export class OrderService {
     await this.cartService.checkout(userId);
 
     orderLogger.info({ orderId: order.id, userId, totalAmount: order.totalAmount }, 'Order created');
+    logService.logApp(LogLevel.INFO, 'création commande', 'success', userId, `order_id=${order.id} amount=${order.totalAmount}`);
     return order;
   }
 
