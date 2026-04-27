@@ -1,6 +1,7 @@
 import { fakeDataService } from '../services/fake-data.service.js';
 import { pool } from '../infrastructure/database/pg.js';
 import { up as createReviewsTable } from '../infrastructure/database/migrations/001_create_reviews.js';
+import { faker } from '@faker-js/faker';
 
 export class DatabaseSeeder {
   async seed() {
