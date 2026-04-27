@@ -24,8 +24,8 @@ export class LogSeeder {
     const appActions = [
       { action: 'ajout panier', details: 'product_id=' + faker.string.uuid() + ' quantity=1' },
       { action: 'suppression panier', details: 'product_id=' + faker.string.uuid() },
-      { action: 'déconnexion utilisateur', details: '' },
-      { action: 'mise à jour profil', details: 'field=email' },
+      { action: 'deconnexion utilisateur', details: '' },
+      { action: 'mise a jour profil', details: 'field=email' },
       { action: 'annulation commande', details: 'order_id=' + faker.string.uuid() },
     ];
 
