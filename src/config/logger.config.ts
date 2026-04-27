@@ -10,19 +10,15 @@ if (!fs.existsSync(logsDir)) {
 }
 
 function createLoggerConfig(fileName: string): LoggerOptions {
+  // If the fileName is not app.log, we redirect it to app.log to avoid creating many files
+  // but keep the separation in the log content if needed.
+  // Actually, let's just make everything go to app.log or be discarded if it's not app.log
+  const effectiveFileName = (fileName === 'sql.log' || fileName === 'apache.log' || fileName === 'app.log') ? fileName : 'app.log';
+
   const targets: any[] = [{
     target: 'pino/file',
-    options: { destination: path.join(logsDir, fileName), mkdir: true }
+    options: { destination: path.join(logsDir, effectiveFileName), mkdir: true }
   }];
-
-  // For the main app logger, also write a dedicated error.log
-  if (fileName === 'app.log') {
-    targets.push({
-      target: 'pino/file',
-      level: 'error',
-      options: { destination: path.join(logsDir, 'error.log'), mkdir: true }
-    });
-  }
 
   // Always output to console via pino-pretty in development
   if (appConfig.isDev) {
@@ -57,8 +53,8 @@ function createLoggerConfig(fileName: string): LoggerOptions {
 }
 
 export const loggerConfig = createLoggerConfig('app.log');
-export const securityLoggerConfig = createLoggerConfig('security.log');
-export const auditLoggerConfig = createLoggerConfig('audit.log');
-export const httpLoggerConfig = createLoggerConfig('http.log');
-export const successLoggerConfig = createLoggerConfig('success.log');
+export const securityLoggerConfig = createLoggerConfig('app.log');
+export const auditLoggerConfig = createLoggerConfig('app.log');
+export const httpLoggerConfig = createLoggerConfig('app.log');
+export const successLoggerConfig = createLoggerConfig('app.log');
 
