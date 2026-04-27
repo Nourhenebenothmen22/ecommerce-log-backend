@@ -3,6 +3,7 @@ import { HttpError } from '../../core/errors/http-error.js';
 import { logSecurityEvent } from '../../infrastructure/security/security-logger.js';
 import { createModuleLogger } from '../../core/logger/logger.js';
 import { env } from '../../config/env.js';
+import { logService, LogLevel } from '../../services/log.service.js';
 import type { LoginDto } from './auth.schema.js';
 import type { AuthTokenResponse } from './auth.types.js';
 
@@ -21,10 +22,12 @@ export class AuthService {
 
     if (!user) {
       logSecurityEvent('repeated_login_failures', { email: payload.email, requestId, ip });
+      logService.logApp(LogLevel.ERROR, 'connexion utilisateur', 'failed', undefined, `email=${payload.email}`, 'invalid credentials');
       throw HttpError.unauthorized('Invalid email or password', 'INVALID_CREDENTIALS');
     }
 
     authLogger.info({ email: payload.email, role: user.role }, 'User login success');
+    logService.logApp(LogLevel.INFO, 'connexion utilisateur', 'success', user.id, `email=${payload.email}`);
 
     // Generate real JWT using standard Interop import
     const token = jwt.sign(
