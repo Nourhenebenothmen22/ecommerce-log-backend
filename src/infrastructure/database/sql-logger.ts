@@ -1,6 +1,7 @@
 import { createModuleLogger } from '../../core/logger/logger.js';
 import { dbConfig } from '../../config/db.config.js';
 import { sanitizeParams } from '../../core/utils/safe-json.js';
+import { logService, LogLevel } from '../../services/log.service.js';
 
 const sqlLogger = createModuleLogger('sql');
 
@@ -10,6 +11,7 @@ export interface SqlLogEntry {
   durationMs: number;
   rowCount?: number;
   params?: unknown[];
+  userId?: string; // Added userId for better logging
 }
 
 /**
