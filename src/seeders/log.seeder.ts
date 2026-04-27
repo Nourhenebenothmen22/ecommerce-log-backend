@@ -20,8 +20,17 @@ export class LogSeeder {
         '/health', '/api/search?q=' + faker.commerce.productAdjective()
       ];
       const url = faker.helpers.arrayElement(urls);
-      const codes = [200, 200, 200, 201, 204, 301, 302, 400, 401, 403, 404, 405, 429, 500, 502, 503];
-      const code = faker.helpers.arrayElement(codes);
+      
+      // Generate a variety of codes from 200 to 500+
+      // 70% chance of standard success codes, 30% chance of random error/redirect codes
+      let code;
+      if (Math.random() > 0.3) {
+        code = faker.helpers.arrayElement([200, 201, 204]);
+      } else {
+        const otherCodes = [301, 302, 400, 401, 403, 404, 405, 409, 413, 415, 422, 429, 500, 501, 502, 503, 504];
+        code = faker.helpers.arrayElement(otherCodes);
+      }
+      
       const ua = faker.internet.userAgent();
       const responseTime = faker.number.int({ min: 5, max: 2000 });
       
