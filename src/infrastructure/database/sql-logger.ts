@@ -29,8 +29,10 @@ export function logQuery(entry: SqlLogEntry): void {
 
   if (isSlow) {
     sqlLogger.warn(logData, `Slow query detected: ${entry.queryName || 'unnamed'}`);
+    logService.logSql(LogLevel.WARNING, entry.queryName || 'unnamed', `duration=${entry.durationMs}ms`, 'success', entry.userId);
   } else {
     sqlLogger.debug(logData, `Query executed: ${entry.queryName || 'unnamed'}`);
+    logService.logSql(LogLevel.INFO, entry.queryName || 'unnamed', `duration=${entry.durationMs}ms`, 'success', entry.userId);
   }
 }
 
@@ -47,6 +49,7 @@ export function logQueryError(entry: Omit<SqlLogEntry, 'rowCount'>, error: Error
     },
     `Query failed: ${entry.queryName || 'unnamed'}`,
   );
+  logService.logSql(LogLevel.ERROR, entry.queryName || 'unnamed', `duration=${entry.durationMs}ms`, 'failed', entry.userId, error.message);
 }
 
 /**

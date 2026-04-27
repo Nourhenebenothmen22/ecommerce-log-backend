@@ -2,6 +2,7 @@ import { OrderRepository } from './order.repository.js';
 import { createModuleLogger } from '../../core/logger/logger.js';
 import { CartService } from '../carts/cart.service.js';
 import { HttpError } from '../../core/errors/http-error.js';
+import { logService, LogLevel } from '../../services/log.service.js';
 
 const orderLogger = createModuleLogger('order_service');
 
