@@ -9,7 +9,7 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
-function createLoggerConfig(fileName: string): LoggerOptions {
+function createLoggerConfig(): LoggerOptions {
   const targets: any[] = [];
 
   // Always output to console via pino-pretty in development
@@ -44,9 +44,9 @@ function createLoggerConfig(fileName: string): LoggerOptions {
   };
 }
 
-export const loggerConfig = createLoggerConfig('app.log');
-export const securityLoggerConfig = createLoggerConfig('app.log');
-export const auditLoggerConfig = createLoggerConfig('app.log');
-export const httpLoggerConfig = createLoggerConfig('app.log');
-export const successLoggerConfig = createLoggerConfig('app.log');
+export const loggerConfig = createLoggerConfig();
+export const securityLoggerConfig = createLoggerConfig();
+export const auditLoggerConfig = createLoggerConfig();
+export const httpLoggerConfig = createLoggerConfig();
+export const successLoggerConfig = createLoggerConfig();
 
