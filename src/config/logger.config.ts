@@ -10,15 +10,7 @@ if (!fs.existsSync(logsDir)) {
 }
 
 function createLoggerConfig(fileName: string): LoggerOptions {
-  // If the fileName is not app.log, we redirect it to app.log to avoid creating many files
-  // but keep the separation in the log content if needed.
-  // Actually, let's just make everything go to app.log or be discarded if it's not app.log
-  const effectiveFileName = (fileName === 'sql.log' || fileName === 'apache.log' || fileName === 'app.log') ? fileName : 'app.log';
-
-  const targets: any[] = [{
-    target: 'pino/file',
-    options: { destination: path.join(logsDir, effectiveFileName), mkdir: true }
-  }];
+  const targets: any[] = [];
 
   // Always output to console via pino-pretty in development
   if (appConfig.isDev) {

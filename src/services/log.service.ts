@@ -76,9 +76,12 @@ export class LogService {
     reason?: string
   ) {
     const userPart = userId ? `user_id=${userId} ` : '';
-    const detailsPart = details ? `${details} ` : '';
-    const reasonPart = reason ? `reason="${reason}"` : '';
-    const message = `${userPart}action="${action}" ${detailsPart}status=${status} ${reasonPart}`.trim();
+    const statusPart = `status=${status}`;
+    const reasonPart = reason ? ` reason="${reason}"` : '';
+    const detailsPart = details ? ` ${details}` : '';
+    
+    // Format: action user_id=... details... status=... reason=...
+    const message = `${action} ${userPart}${detailsPart.trim()} ${statusPart}${reasonPart}`.trim();
     this.append(LOGGING_CONFIG.APP_LOG, this.formatMessage('APP', level, message));
   }
 }
