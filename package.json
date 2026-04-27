@@ -10,7 +10,9 @@
     "start": "node dist/server.js",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/run-seeder.ts",
+    "seed:logs": "tsx src/scripts/run-seeder.ts",
+    "test:scheduler": "tsx src/scripts/test-scheduler.ts"
   },
   "keywords": [
     "ecommerce",

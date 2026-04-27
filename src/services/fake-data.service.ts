@@ -20,7 +20,7 @@ export class FakeDataService {
       const userId = res.rows[0].id;
 
       logService.logSql(LogLevel.INFO, 'INSERT INTO users', `email=${email} role=${role}`, 'success', userId);
-      logService.logApp(LogLevel.INFO, role === 'admin' ? 'création admin' : 'inscription utilisateur', 'success', userId, `email=${email}`);
+      logService.logApp(LogLevel.INFO, role === 'admin' ? 'creation admin' : 'inscription utilisateur', 'success', userId, `email=${email}`);
       
       return userId;
     } catch (error) {
@@ -88,7 +88,7 @@ export class FakeDataService {
       );
       const orderId = orderRes.rows[0].id;
       logService.logSql(LogLevel.INFO, 'INSERT INTO orders', `user_id=${userId} total=${totalAmount}`, 'success', userId);
-      logService.logApp(LogLevel.INFO, 'création commande', 'success', userId, `order_id=${orderId} amount=${totalAmount}`);
+      logService.logApp(LogLevel.INFO, 'creation commande', 'success', userId, `order_id=${orderId} amount=${totalAmount}`);
 
       // 2. Create payment
       await pool.query(
@@ -96,11 +96,11 @@ export class FakeDataService {
         [orderId, totalAmount, 'completed', faker.string.uuid()]
       );
       logService.logSql(LogLevel.INFO, 'INSERT INTO payments', `order_id=${orderId} amount=${totalAmount}`, 'success', userId);
-      logService.logApp(LogLevel.INFO, 'paiement réussi', 'success', userId, `order_id=${orderId} amount=${totalAmount}`);
+      logService.logApp(LogLevel.INFO, 'paiement reussi', 'success', userId, `order_id=${orderId} amount=${totalAmount}`);
 
       return orderId;
     } catch (error) {
-      logService.logApp(LogLevel.ERROR, 'paiement échoué', 'failed', userId, `reason="database error"`);
+      logService.logApp(LogLevel.ERROR, 'paiement echoue', 'failed', userId, `reason="database error"`);
       return null;
     }
   }
