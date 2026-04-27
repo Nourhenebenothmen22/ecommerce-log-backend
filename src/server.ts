@@ -2,6 +2,7 @@ import { app } from './app.js';
 import { env } from './config/env.js';
 import { logger } from './core/logger/logger.js';
 import { testConnection, pool } from './infrastructure/database/pg.js';
+import { dailyLogScheduler } from './schedulers/daily-log.scheduler.js';
 
 const PORT = env.PORT;
 
@@ -10,6 +11,9 @@ async function bootstrap() {
 
   try {
     await testConnection();
+    
+    // Start the daily log scheduler
+    dailyLogScheduler.start();
 
     const server = app.listen(PORT, () => {
       logger.info(`Server startup success on port ${PORT} [${env.NODE_ENV}]`);

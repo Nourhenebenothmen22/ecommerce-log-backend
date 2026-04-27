@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import { requestContextMiddleware } from './middlewares/request-context.middleware.js';
+import { apacheLoggerMiddleware } from './middlewares/apache-logger.middleware.js';
 import { requestLoggerMiddleware } from './middlewares/request-logger.middleware.js';
 import { successLoggerMiddleware } from './middlewares/success-logger.middleware.js';
 import { createHelmetMiddleware } from './infrastructure/security/helmet.js';
@@ -18,8 +19,9 @@ app.use(cookieParser());
 app.use(rateLimitMiddleware); // Apply globally
 app.use(express.json());
 
-// Inject context and pino-http logger
+// Inject context and loggers
 app.use(requestContextMiddleware);
+app.use(apacheLoggerMiddleware);
 app.use(requestLoggerMiddleware);
 app.use(successLoggerMiddleware);
 
